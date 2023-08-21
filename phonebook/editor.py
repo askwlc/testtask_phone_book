@@ -1,4 +1,4 @@
-from validation import is_number, not_empty, valid_input
+from .validation import is_number, not_empty, valid_input
 
 
 def display_values(results):

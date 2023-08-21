@@ -3,16 +3,17 @@ from unittest.mock import patch
 import os
 
 from phonebook.editor import add_value
+from phonebook.loader import load_phonebook, save_phonebook
 
 
 class TestPhonebookFunctions(unittest.TestCase):
 
     def setUp(self):
         self.sample_data = [
-            {"Фамилия": "Иванов", "Имя": "Иван", "Отчество": "Иванович", "Организация": "XYZ Corp",
+            {"Фамилия": "Иванов", "Имя": "Иван", "Отчество": "Иванович", "Организация": "Эпл",
              "Рабочий телефон": "12345", "Личный телефон": "67890"},
-            {"Фамилия": "Петров", "Имя": "Петр", "Отчество": "Петрович", "Организация": "ABC Corp",
-             "Рабочий телефон": "54321", "Личный телефон": "09876"}
+            {"Фамилия": "Петров", "Имя": "Петр", "Отчество": "Петрович", "Организация": "Эпл",
+             "Рабочий телефон": "84957778899", "Личный телефон": "89997778899"}
         ]
 
     def test_load_phonebook(self):
@@ -37,7 +38,7 @@ class TestPhonebookFunctions(unittest.TestCase):
         for i, line in enumerate(lines[1:]):
             self.assertEqual(dict(zip(headers, line.strip().split(','))), self.sample_data[i])
 
-    @patch('builtins.input', side_effect=["Тестов", "Тест", "Тестович", "Test Corp", "11111", "22222"])
+    @patch('builtins.input', side_effect=["Тестов", "Тест", "Тестович", "Тест", "11111", "22222"])
     def test_add_value(self, mock_input):
         phonebook = []
         add_value(phonebook)
