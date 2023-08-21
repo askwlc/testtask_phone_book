@@ -15,6 +15,7 @@ def main(phonebook):
     }
 
     while True:
+        print('Доступные команды:')
         for key, value in commands.items():
             print(f'{key}. {value["action"]}')
 

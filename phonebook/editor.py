@@ -1,6 +1,14 @@
 from validation import is_number, not_empty, valid_input
 
 
+def display_values(results):
+    """Функция отформатированного отображения записей."""
+    for value in results:
+        for key, val in value.items():
+            print(f"{key}: {val}")
+        print('-' * 40)
+
+
 def add_value(phonebook):
     """Добавление записей в телефонную книгу."""
     surname = valid_input("Введите Фамилию: ", not_empty)
@@ -23,7 +31,7 @@ def add_value(phonebook):
     print('Записи успешно добавлены')
 
 
-def list_values(phonebook, page_size=10):
+def list_values(phonebook, page_size=2):
     """Функция вывода записей постранично."""
     num_pages = len(phonebook) // page_size + (1 if len(phonebook) % page_size else 0)
     current_page = 0
@@ -31,17 +39,20 @@ def list_values(phonebook, page_size=10):
     while True:
         start_index = current_page * page_size
         end_index = start_index + page_size
-        for value in phonebook[start_index:end_index]:
-            print(value)
+        display_values(phonebook[start_index:end_index])
 
-        response = input(f'Введите номер страницы от 1 до {num_pages}, или "q" - для выхода')
+        if num_pages == 1:
+            break
+
+        response = input(f'Введите номер страницы от 1 до {num_pages}, или "q" - для выхода: ')
 
         if response == 'q':
             break
-        elif response.is_number() and 1 <= int(response) <= num_pages:
+        elif response.isdigit() and 1 <= int(response) <= num_pages:
             current_page = int(response) - 1
         else:
-            print(f'Неверное значение. Введите номер страницы от 1 до {num_pages}, или "q" - для выхода')
+            print(f'Неверное значение. Введите номер страницы от 1 до {num_pages}, или "q" - для выхода.')
+            continue
 
 
 def search_value(phonebook):
@@ -55,8 +66,7 @@ def search_value(phonebook):
     if not results:
         print('Запись не найдена')
     else:
-        for value in results:
-            print(value)
+        display_values(results)
 
 
 def edit_value(phonebook):
@@ -72,7 +82,7 @@ def edit_value(phonebook):
 
     try:
         index = int(valid_input('Введите номер записи, для редактирования: ', is_number))
-        value_edit = values_to_edit[index]
+        value_edit = values_to_edit[index - 1]
     except (ValueError, IndexError):
         return f'Неверное значение индекса.'
 
@@ -80,11 +90,11 @@ def edit_value(phonebook):
     for i, f in enumerate(fields):
         print(f'{i + 1} - {f}')
 
-    field_number = value_edit(f'Введите номер ячейки для редактирования: ',
-                              lambda x: x.isdigit() and 1 <= x <= len(fields))
+    field_number = valid_input(f'Введите номер ячейки для редактирования: ',
+                              lambda x: x.isdigit() and 1 <= int(x) <= len(fields))
 
-    field = fields[int(field_number)]
+    field = fields[int(field_number) - 1]
     new_value = input(f'Введите новое значение для поля {field}: ').strip()
-    values_to_edit[field] = new_value
+    value_edit[field] = new_value
 
     print('Запись отредактирована.')
