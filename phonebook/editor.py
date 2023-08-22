@@ -1,13 +1,21 @@
-from .validation import is_number, not_empty, valid_input
+from validation import is_number, not_empty, valid_input
 
 
 def display_values(results):
-    """Функция отформатированного отображения записей."""
-    for value in results:
-        for key, val in value.items():
-            print(f"{key}: {val}")
-        print('-' * 40)
+    """Функция отформатированного отображения записей построчно."""
+    headers = ['Фамилия', 'Имя', 'Отчество', 'Организация', 'Рабочий телефон', 'Личный телефон']
+    column_widths = [
+        max(len(header), max((len(value[header]) for value in results), default=0))
+        for header in headers
+    ]
 
+    header_row = ' | '.join([header.ljust(width) for header, width in zip(headers, column_widths)])
+    print(header_row)
+    print('-' * len(header_row))
+
+    for value in results:
+        row = [value[header].ljust(width) for header, width in zip(headers, column_widths)]
+        print(' | '.join(row))
 
 def add_value(phonebook):
     """Добавление записей в телефонную книгу."""
@@ -31,7 +39,7 @@ def add_value(phonebook):
     print('Записи успешно добавлены')
 
 
-def list_values(phonebook, page_size=2):
+def list_values(phonebook, page_size=5):
     """Функция вывода записей постранично."""
     num_pages = len(phonebook) // page_size + (1 if len(phonebook) % page_size else 0)
     current_page = 0
